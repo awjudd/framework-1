@@ -1,0 +1,24 @@
+@tailwind base;
+
+@tailwind components;
+
+input[type='checkbox'] {
+	@apply dark:border-gray-700;
+	&:checked {
+		@apply bg-white dark:bg-gray-900 dark:text-white;
+		background-position: 50%;
+		background-size: cover;
+		background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 16 16' fill='%23fff' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.707 7.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4a1 1 0 00-1.414-1.414L7 8.586 5.707 7.293z'/%3E%3C/svg%3E");
+	}
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+	display: none;
+}
+
+.hide-scrollbar {
+	-ms-overflow-style: none;  /* IE and Edge */
+	scrollbar-width: none;  /* Firefox */
+}
+
+@tailwind utilities;

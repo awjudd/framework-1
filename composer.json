@@ -1,0 +1,28 @@
+{
+	"name": "haunt-pet/haunt",
+	"description": "The base package for Haunt.",
+	"type": "package",
+	"license": "proprietary",
+	"require": {
+		"php": "^8.0",
+		"laravel/framework": "^8.52",
+		"blade-ui-kit/blade-heroicons": "^1.2"
+	},
+	"autoload": {
+		"psr-4": {
+			"Haunt\\": "src/"
+		}
+	},
+	"extra": {
+		"laravel": {
+			"providers": [
+				"Haunt\\Providers\\HauntServiceProvider"
+			],
+			"aliases": {
+				"Haunt": "Haunt\\Facades\\Haunt"
+			}
+		}
+	},
+	"minimum-stability": "dev",
+	"prefer-stable": true
+}
