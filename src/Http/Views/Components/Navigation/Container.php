@@ -56,7 +56,7 @@ class Container extends Component
     public function applyDirection(): string
     {
 		$break = $this->break === '' ? '' : "{$this->break}:";
-		return $this->direction === 'h' ? "{$break}flex-row {$break}space-x-2 {$break}space-y-0" : "{$break}flex-col {$break}space-x-0 {$break}space-y-2";
+		return $this->direction === 'h' ? "{$break}flex-row {$break}space-x-4 {$break}space-y-0" : "{$break}flex-col {$break}space-x-0 {$break}space-y-2";
     }
 
     /**

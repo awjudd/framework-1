@@ -28,9 +28,8 @@ class InstallHauntCommand extends Command
 	public function handle()
 	{
 		$this->configCache()
-             ->linkThemes()
-			 ->refreshPlugins()
-			 ->clearCache();
+             ->initMigrations()
+			 ->installCore();
 	}
 
 	/**
@@ -46,37 +45,27 @@ class InstallHauntCommand extends Command
 	}
 
 	/**
-	 * Link the themes folder.
+	 * Run the default migrations.
 	 *
 	 * @return \Haunt\Commands\InstallHauntCommand
 	 */
-	private function linkThemes()
+	private function initMigrations()
 	{
-		$this->call('haunt:link-themes');
+		$this->call('haunt:migrate');
 
 		return $this;
 	}
 
 	/**
-	 * Refresh the plugins manifest.
+	 * Install the "haunt-pet/plugin-core" plugin.
 	 *
 	 * @return \Haunt\Commands\InstallHauntCommand
 	 */
-	private function refreshPlugins()
+	private function installCore()
 	{
-		$this->call('haunt:refresh-plugins');
-
-		return $this;
-	}
-
-	/**
-	 * Clear the cache.
-	 *
-	 * @return \Haunt\Commands\InstallHauntCommand
-	 */
-	private function clearCache()
-	{
-		$this->call('cache:clear');
+		$this->call('haunt:install-plugin', [
+			'--package' => 'haunt-pet/plugin-core'
+		]);
 
 		return $this;
 	}

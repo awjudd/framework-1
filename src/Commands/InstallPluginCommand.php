@@ -2,6 +2,9 @@
 namespace Haunt\Commands;
 
 use Haunt\Library\Command;
+use Illuminate\Support\Composer;
+use Haunt\Entities\Models\Plugin;
+use Illuminate\Filesystem\Filesystem;
 
 class InstallPluginCommand extends Command
 {
@@ -11,7 +14,7 @@ class InstallPluginCommand extends Command
      * @var string
      */
     protected $signature = 'haunt:install-plugin
-							{--package= : The plugin to install.}
+							{--package=haunt-pet/plugin-core : The plugin to install.}
 							';
 
     /**
@@ -30,49 +33,47 @@ class InstallPluginCommand extends Command
 	{
 		$package = $this->option('package');
 
-		//$composer = new Composer(new Filesystem);
-		//dd($composer->getProcess());
-
 		// check if the plugin is already installed
 		if(Plugin::where('package', '=', $package)->first()) {
+			$this->output->writeln("<comment>Plugin Already Installed:</> {$package}");
 			return;
 		}
 
-		// attempt to download and extract the plugin
+		// TODO: install package from composer
 
-		// ALTER LATER: get the data after downloading
-		$data = [
-			'name' => 'Haunt Core',
-			'main' => 'HauntCore\\Plugin',
-			'autoload' => [
-				'HauntCore\\' => 'src/'
-			],
-			'priority' => 0,
-		];
+		// create a plugin instance
+		$plugin = new Plugin;
+		$plugin->package = $package;
+		$plugin->main = 'HauntCore\\Plugin';
+		$plugin->name = 'HauntCore';
+		$plugin->version = '1.0.0';
+		$plugin->priority = '1';
+		$plugin->active = true;
 
-		$instance = new $data['main'];
+		$instance = $plugin->instance();
 
-		$this->call('haunt:migrate', [
-			'--batch' => $data['name'],
-			'--path' => $instance->migrations,
-		]);
-
-		$state = $instance->activate('1.0.0');
-
-		if(count($state) > 0) {
-			$instance->deactivate(true);
-			$this->error(array_values($state)[0]);
-            return $this;
+		// check if any migrations need to run
+		if($instance->migrations) {
+			$this->call('haunt:migrate', [
+				'--batch' => $plugin->package,
+				'--path' => $instance->migrations,
+			]);
 		}
 
-		// create plugin entry in database
-		$plugin = Plugin::create([
-			'package' => $package,
-			'version' => '1.0.0',
-			'data' => json_encode($data),
-			'active' => 1
-		]);
+		// attempt to activate the plugin
+		$state = $instance->activate($plugin->version);
 
-		$this->info("Installed the {$package} plugin.");
+		// check if there were any errors
+		if($state->count() > 0) {
+			$instance->deactivate();
+			$this->output->writeln("<error>Failed to Activate Plugin:</error> {$state->first()}");
+			return;
+		}
+
+		// save the plugin model
+		$plugin->save();
+
+		$this->output->writeln("<info>Plugin Installed:</info> {$plugin->package}");
+		return;
 	}
 }

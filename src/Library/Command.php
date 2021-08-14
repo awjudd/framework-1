@@ -11,6 +11,12 @@ class Command extends BaseCommand
      */
     protected \Illuminate\Filesystem\Filesystem $files;
 
+    /**
+     * The filesystem instance.
+     * @var \Illuminate\Support\Composer
+     */
+    protected \Illuminate\Support\Composer $composer;
+
 	/**
 	 * The direct path.
 	 * @var string
@@ -26,12 +32,14 @@ class Command extends BaseCommand
 	/**
      * Create a new controller creator command instance.
      *
-     * @param \Illuminate\Filesystem\Filesystem 	$files
+     * @param \Illuminate\Filesystem\Filesystem $files
+     * @param \Illuminate\Support\Composer $composer
      * @return void
      */
-    public function __construct(\Illuminate\Filesystem\Filesystem $files)
+    public function __construct(\Illuminate\Filesystem\Filesystem $files, \Illuminate\Support\Composer $composer)
     {
         parent::__construct();
+        $this->composer = $composer;
         $this->files = $files;
 		$this->stubDirectory = $this->root.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.'Commands'.DIRECTORY_SEPARATOR.'stubs'.DIRECTORY_SEPARATOR;
     }

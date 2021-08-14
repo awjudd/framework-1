@@ -1,4 +1,14 @@
 <?php
-Route::group(['as' => 'admin.', 'middleware' => [], 'namespace' => 'Haunt\\Http\\Controllers\\Admin', 'prefix' => config('haunt.route')], function() {
-	Route::get('/', ['as' => 'index', 'uses' => 'HomeController@index']);
+
+use Haunt\Entities\Models\Plugin;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Route;
+
+Route::group(['as' => 'admin.', 'middleware' => [], 'prefix' => config('haunt.route')], function() {
+	Plugin::active(true)->get()->each(function($item) {
+		$instance = $item->instance();
+		if(File::exists($instance->routes['admin'])) {
+			require_once($instance->routes['admin']);
+		}
+	});
 });

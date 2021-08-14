@@ -13,6 +13,7 @@ class HauntServiceProvider extends AggregateServiceProvider
     protected $providers = [
 		\Haunt\Providers\AppServiceProvider::class,
 		\Haunt\Providers\ConsoleServiceProvider::class,
-		// \Haunt\Providers\PluginServiceProvider::class,
+		\Haunt\Providers\MacroServiceProvider::class,
+		\Haunt\Providers\ViewServiceProvider::class,
 	];
 }

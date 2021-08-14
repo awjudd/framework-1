@@ -42,25 +42,9 @@ class MigrateCommand extends Command
 			return;
 		}
 
-		$batch = $this->option('batch');
+		$batch = $this->option('batch') ?? "haunt-pet/haunt";
 		$option = $this->argument('option');
-		$path = $this->option('path');
-
-		// check if the migrations table exists
-		if(!Schema::hasTable('migrations')) {
-			foreach(File::allFiles("{$this->root}/database/migrations") as $file) {
-				File::requireOnce($file);
-				$filename = pathinfo($file->getFilename(), PATHINFO_FILENAME);
-				$migration = $this->resolve($filename);
-				$migration->up();
-
-				$this->output->writeln("<info>Migrated:</info> {$filename}");
-			}
-		}
-
-		if($batch === null) {
-			return;
-		}
+		$path = $this->option('path') ?? "{$this->root}/database/migrations";
 
 		foreach(File::allFiles($path) as $file) {
 			File::requireOnce($file);
@@ -70,7 +54,8 @@ class MigrateCommand extends Command
 			try {
 				$migration->$option();
 			} catch(\Exception $e) {
-				//
+				$this->output->writeln("<fg=red>Failed to Migrate:</> {$e->getSql()}");
+				continue;
 			}
 
 			if($option === 'up') {
@@ -81,7 +66,7 @@ class MigrateCommand extends Command
 				DB::table('migrations')
 					->where([['batch', '=', $batch], ['migration', '=', $filename]])
 					->delete();
-				$this->output->writeln("<error>Dropped:</error> {$filename}");
+				$this->output->writeln("<comment>Dropped:</comment> {$filename}");
 			}
 		}
 	}
