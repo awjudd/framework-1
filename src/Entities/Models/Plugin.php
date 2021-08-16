@@ -4,10 +4,16 @@ namespace Haunt\Entities\Models;
 use Haunt\Library\Classes\Model;
 
 /**
- * Haunt\Entities\Models\User\Meta
+ * Haunt\Entities\Models\Plugin
  *
  * Properties
  * @property int $id
+ * @property string $package
+ * @property string $main
+ * @property string $name
+ * @property string $version
+ * @property int $priority
+ * @property bool $active
  * @property string $created_at
  * @property string $updated_at
  *
@@ -30,16 +36,16 @@ class Plugin extends Model
 	];
 
 	/**
+	 * The identifier to use for routing.
+	 * @var string
+	 */
+	public string $routeIdentifier = 'id';
+
+	/**
 	 * The database table used by the model.
 	 * @var string
 	 */
 	protected $table = 'plugins';
-
-	/**
-	 * The identifier to use in a url.
-	 * @var string
-	 */
-	protected $urlIdentifier = 'id';
 
 	/**
 	 * Only fetch the active plugins.

@@ -1,7 +1,7 @@
 <?php
 namespace Haunt\Http\Controllers\Admin;
 
-use Haunt\Library\Controller;
+use Haunt\Extend\Controller;
 
 class HomeController extends Controller
 {

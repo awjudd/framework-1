@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePluginsTable extends Migration
+class CreateThemesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,12 @@ class CreatePluginsTable extends Migration
      */
     public function up()
     {
-        Schema::create('plugins', function (Blueprint $table) {
+        Schema::create('themes', function (Blueprint $table) {
             $table->id();
 			$table->string('package')->unique();
-			$table->string('main');
 			$table->string('name');
 			$table->string('version');
-			$table->integer('priority');
-			$table->boolean('active')->default(true);
+			$table->boolean('active')->default(false);
             $table->timestamps();
         });
     }
@@ -32,6 +30,6 @@ class CreatePluginsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('plugins');
+        Schema::dropIfExists('themes');
     }
 }

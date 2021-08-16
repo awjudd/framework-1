@@ -22,15 +22,12 @@ class AppServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
-		Haunt::init();
-
 		// config
 		$this->mergeConfigFrom("{$this->root}/config/haunt.php", 'haunt');
 		$this->publishes(["{$this->root}/config/haunt.php" => config_path('haunt.php')], 'haunt');
 
 		// routes
-		$this->loadRoutesFrom("{$this->root}/routes/game.php");
-		$this->loadRoutesFrom("{$this->root}/routes/admin.php");
+		$this->loadRoutesFrom("{$this->root}/routes/web.php");
 		app('router')->aliasMiddleware('haunt-installed', \Haunt\Http\Middleware\HauntInstalled::class);
 
 		// translations
@@ -41,6 +38,8 @@ class AppServiceProvider extends ServiceProvider
 
 		// paginator
         Paginator::defaultView('haunt-component::pagination');
+
+		Haunt::init();
 	}
 
 	/**

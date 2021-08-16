@@ -11,18 +11,21 @@ class Actions extends Component
 	 * @var string
 	 */
 	public string $delete;
+	public string $deleteIcon;
 
 	/**
 	 * The edit route path.
 	 * @var string
 	 */
 	public string $edit;
+	public string $editIcon;
 
 	/**
 	 * The view route path.
 	 * @var string
 	 */
 	public string $see;
+	public string $seeIcon;
 
     /**
      * Create a new component instance.
@@ -32,11 +35,14 @@ class Actions extends Component
 	 * @param string $see
      * @return void
      */
-    public function __construct(string $edit, string $delete = '', string $see = '')
+    public function __construct(string $edit, string $delete = '', string $deleteIcon = 'trash', string $editIcon = 'cog', string $see = '', string $seeIcon = 'eye')
     {
         $this->delete = $delete;
+        $this->deleteIcon = $deleteIcon;
 		$this->edit = $edit;
+		$this->editIcon = $editIcon;
 		$this->see = $see;
+		$this->seeIcon = $seeIcon;
     }
 
     /**

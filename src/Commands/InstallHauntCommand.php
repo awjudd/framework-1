@@ -28,8 +28,7 @@ class InstallHauntCommand extends Command
 	public function handle()
 	{
 		$this->configCache()
-             ->initMigrations()
-			 ->installCore();
+             ->initMigrations();
 	}
 
 	/**

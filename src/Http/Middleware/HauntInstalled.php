@@ -21,7 +21,7 @@ class HauntInstalled
 		if((Haunt::isInstalled() && $state === 'true') || (!Haunt::isInstalled() && $state === 'false')) {
 			return $next($request);
 		} else {
-			return redirect()->route('admin.install.index');
+			return redirect()->route('install.index');
 		}
     }
 }

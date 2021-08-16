@@ -110,6 +110,13 @@ class Haunt
 		$this->addClass('Extend\\Controller', \Haunt\Library\Classes\Controller::class);
 		$this->addClass('Extend\\Model', \Haunt\Library\Classes\Model::class);
 		$this->addClass('Extend\\Observer', \Haunt\Library\Classes\Observer::class);
+
+		$this->addNavigationParent('admin.index', 'Dashboard', [
+		], 'home', 0);
+		$this->addNavigationParent('admin.appearance.themes.index', __('haunt::appearance/themes.titles.index'), [
+			['route' => 'admin.appearance.plugins.index', 'title' => __('haunt::appearance/plugins.titles.index'), 'priority' => 10],
+			['route' => 'admin.appearance.plugins.create'],
+		], 'color-swatch', 100);
 	}
 
 	/**
