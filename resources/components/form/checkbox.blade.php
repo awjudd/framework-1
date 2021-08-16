@@ -6,5 +6,5 @@
 />
 
 @if($content !== '')
-	<x-haunt::form.label inline>{{ $content }}</x-haunt::form.label>
+	<x-haunt::form.label :content="$content" inline/>
 @endif

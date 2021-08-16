@@ -1,6 +1,7 @@
 <?php
 namespace Haunt\Commands;
 
+use Haunt\Facades\Haunt;
 use Haunt\Library\Command;
 use Illuminate\Support\Composer;
 use Haunt\Entities\Models\Plugin;
@@ -61,11 +62,11 @@ class InstallPluginCommand extends Command
 		}
 
 		// attempt to activate the plugin
-		$state = $instance->activate($plugin->version);
+		$state = $instance->install($plugin->version);
 
 		// check if there were any errors
 		if($state->count() > 0) {
-			$instance->deactivate();
+			$instance->uninstall();
 			$this->output->writeln("<error>Failed to Activate Plugin:</error> {$state->first()}");
 			return;
 		}

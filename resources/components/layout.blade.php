@@ -42,9 +42,29 @@
 			</div>
 			<!-- content -->
 			<div class="p-4 md:p-8">
+				<!-- sessions -->
+				@if($errors->any())
+					<x-haunt::alert theme="error">
+						<ul>
+							@foreach ($errors->all() as $error)
+								<li>{{ $error }}</li>
+							@endforeach
+						</ul>
+					</x-haunt::alert>
+				@endif
+
+				@if(session()->has('success'))
+					<x-haunt::alert theme="success">
+						{{ session()->get('success') }}
+					</x-haunt::alert>
+				@endif
+
+				<!-- title -->
 				@if($title !== null)
 					<x-haunt::heading level="1">{{ $title }}</x-haunt::heading>
 				@endif
+
+				<!-- content -->
 				{{ $slot }}
 			</div>
 		</div>

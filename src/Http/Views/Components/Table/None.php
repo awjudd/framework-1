@@ -1,26 +1,23 @@
 <?php
-namespace Haunt\Http\Views\Components\Form;
+
+namespace Haunt\Http\Views\Components\Table;
 
 use Illuminate\View\Component;
-use Haunt\Http\Views\Traits\Inline;
 use Haunt\Http\Views\Traits\Content;
 
-class Label extends Component
+class None extends Component
 {
 	use Content;
-	use Inline;
 
     /**
      * Create a new component instance.
      *
-     * @param string|null $content
-     * @param bool $inline
+	 * @param string $content
      * @return void
      */
-    public function __construct(?string $content = null, bool $inline = false)
+    public function __construct(string $content)
     {
         $this->content = $content;
-        $this->inline = $inline;
     }
 
     /**
@@ -30,6 +27,6 @@ class Label extends Component
      */
     public function render()
     {
-        return view('haunt-component::form.label');
+        return view('haunt-component::table.none');
     }
 }

@@ -1,7 +1,7 @@
 <?php
 namespace Haunt\Entities\Models;
 
-use Haunt\Extend\Model;
+use Haunt\Library\Classes\Model;
 
 /**
  * Haunt\Entities\Models\User\Meta

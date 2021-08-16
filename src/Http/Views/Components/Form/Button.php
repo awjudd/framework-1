@@ -1,26 +1,31 @@
 <?php
+
 namespace Haunt\Http\Views\Components\Form;
 
 use Illuminate\View\Component;
-use Haunt\Http\Views\Traits\Inline;
+use Haunt\Http\Views\Traits\Theme;
 use Haunt\Http\Views\Traits\Content;
+use Haunt\Http\Views\Traits\FullWidth;
 
-class Label extends Component
+class Button extends Component
 {
 	use Content;
-	use Inline;
+	use FullWidth;
+    use Theme;
 
     /**
      * Create a new component instance.
      *
      * @param string|null $content
-     * @param bool $inline
+     * @param bool $fullWidth
+     * @param string $theme
      * @return void
      */
-    public function __construct(?string $content = null, bool $inline = false)
+    public function __construct(?string $content = null, bool $fullWidth = false, string $theme = 'info')
     {
         $this->content = $content;
-        $this->inline = $inline;
+        $this->fullWidth = $fullWidth;
+        $this->theme = $theme;
     }
 
     /**
@@ -30,6 +35,6 @@ class Label extends Component
      */
     public function render()
     {
-        return view('haunt-component::form.label');
+        return view('haunt-component::form.button');
     }
 }

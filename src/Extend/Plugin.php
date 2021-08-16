@@ -4,6 +4,12 @@ namespace Haunt\Extend;
 abstract class Plugin
 {
 	/**
+	 * The classes to register.
+	 * @var array<string>
+	 */
+	public array $classes = [];
+
+	/**
 	 * The full namespace of this plugin.
 	 * @var string
 	 */
@@ -14,12 +20,6 @@ abstract class Plugin
 	 * @var string|null
 	 */
 	public ?string $migrations = null;
-
-	/**
-	 * The models to register.
-	 * @var array<string>
-	 */
-	protected array $models = [];
 
 	/**
 	 * Get the plugin root directory.
@@ -40,19 +40,19 @@ abstract class Plugin
      * A slug to use for the plugin.
      * @var string
      */
-    protected string $slug;
+    public string $slug;
 
 	/**
 	 * The path location of the translations.
 	 * @var string|null
 	 */
-	protected ?string $translations = null;
+	public ?string $translations = null;
 
 	/**
 	 * The path location of the views.
 	 * @var string|null
 	 */
-	protected ?string $views = null;
+	public ?string $views = null;
 
 	/**
 	 * Create a new plugin instance.
@@ -66,19 +66,20 @@ abstract class Plugin
 	}
 
 	/**
-	 * Activate a plugin.
+	 * Install the plugin.
 	 *
 	 * @param string $version
 	 * @return \Illuminate\Support\Collection
 	 */
-	abstract public function activate(string $version): \Illuminate\Support\Collection;
+	abstract public function install(string $version): \Illuminate\Support\Collection;
 
 	/**
-	 * Deactivate the plugin.
+	 * Uninstall the plugin.
 	 *
+	 * @param string $version
 	 * @return void
 	 */
-	abstract public function deactivate(): void;
+	abstract public function uninstall(string $version): void;
 
 	/**
 	 * Initialise the plugin.
@@ -86,24 +87,4 @@ abstract class Plugin
 	 * @return void
 	 */
 	abstract public function init(): void;
-
-	/**
-	 * Setup the plugin.
-	 *
-	 * @return void
-	 */
-	public function setup(): void
-	{
-		if($this->views !== null) {
-			app('view')->addNamespace($this->slug, $this->views);
-		}
-
-		if($this->translations !== null) {
-			app('translator')->addNamespace($this->slug, $this->translations);
-		}
-
-		foreach($this->models as $name => $class) {
-			class_alias($class, '\\Haunt\\Models\\'.$name);
-		}
-	}
 }

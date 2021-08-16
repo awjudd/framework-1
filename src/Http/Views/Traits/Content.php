@@ -5,7 +5,7 @@ trait Content
 {
     /**
      * Whether to display the element inline.
-     * @var bool
+     * @var string|null
      */
-    public string $content;
+    public ?string $content;
 }

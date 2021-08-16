@@ -2,9 +2,12 @@
 namespace Haunt\Http\Views\Components\Navigation;
 
 use Illuminate\View\Component;
+use Haunt\Http\Views\Traits\Inline;
 
 class Container extends Component
 {
+	use Inline;
+
 	/**
 	 * The direction to order the navigation items.
 	 * @var bool
@@ -16,12 +19,6 @@ class Container extends Component
 	 * @var string
 	 */
 	public string $direction;
-
-	/**
-	 * The direction to order the navigation items.
-	 * @var bool
-	 */
-	public bool $inline;
 
     /**
      * Create a new component instance.

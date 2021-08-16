@@ -1,10 +1,18 @@
 <?php
 namespace Haunt;
 
+use Haunt\Entities\Models\Plugin;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Schema;
 
 class Haunt
 {
+	/**
+	 * The models to register.
+	 * @var array
+	 */
+	private array $classes;
+
 	/**
 	 * The admin navigation.
 	 * @var \Illuminate\Support\Collection
@@ -14,6 +22,96 @@ class Haunt
 	public function __construct()
 	{
 		$this->navigation = collect();
+	}
+
+	/**
+	 * Check if Haunt is installed.
+	 *
+	 * @return bool
+	 */
+	public function isInstalled(): bool
+	{
+		$state = true;
+
+		if(!Schema::hasTable('plugins')) {
+			$state = false;
+		}
+
+		return $state;
+	}
+
+	/**
+	 * Setup Haunt.
+	 *
+	 * @return void
+	 */
+	public function setup(): void
+	{
+		$this->addClass('Extend\\Action', \Haunt\Library\Classes\Action::class);
+		$this->addClass('Extend\\Authenticatable', \Haunt\Library\Classes\Authenticatable::class);
+		$this->addClass('Extend\\Controller', \Haunt\Library\Classes\Controller::class);
+		$this->addClass('Extend\\Model', \Haunt\Library\Classes\Model::class);
+		$this->addClass('Extend\\Observer', \Haunt\Library\Classes\Observer::class);
+	}
+
+	/**
+	 * Initialise Haunt.
+	 *
+	 * @return void
+	 */
+	public function init(): void
+	{
+		$this->setup();
+
+		if($this->isInstalled()) {
+			$plugins = Plugin::active()->priority()->get();
+
+			$plugins->each(function($item) {
+				$instance = $item->instance();
+				if($instance->views !== null) {
+					app('view')->addNamespace($instance->slug, $instance->views);
+				}
+				if($instance->translations !== null) {
+					app('translator')->addNamespace($instance->slug, $instance->translations);
+				}
+				$this->classes = array_merge($this->classes, $instance->classes);
+			});
+
+			$this->registerClasses();
+
+			$plugins->each(function($item) {
+				$instance = $item->instance();
+				$instance->init();
+			});
+		} else {
+			$this->registerClasses();
+		}
+	}
+
+	/**
+	 * Register the models.
+	 *
+	 * @return void
+	 */
+	private function registerClasses(): void
+	{
+		foreach($this->classes as $name => $class) {
+			if(!class_exists("\\Haunt\\{$name}", false)) {
+				class_alias($class, "\\Haunt\\{$name}");
+			}
+		}
+	}
+
+	/**
+	 * Add a class to register.
+	 *
+	 * @param string $Name
+	 * @param string $class
+	 * @return void
+	 */
+	public function addClass(string $name, string $class): void
+	{
+		$this->classes[$name] = $class;
 	}
 
 	/**
@@ -42,7 +140,7 @@ class Haunt
 
 		$this->addNavigationChild($route, $route, $title, 0);
 		foreach($children as $child) {
-			$this->addNavigationChild($route, $child['route'], $child['title'], $child['priority'] ?? 50);
+			$this->addNavigationChild($route, $child['route'], $child['title'] ?? null, $child['priority'] ?? 50);
 		}
 
 		return true;
@@ -57,7 +155,7 @@ class Haunt
 	 * @param int $priority
 	 * @return bool
 	 */
-	public function addNavigationChild(string $parent, string $route, string $title, int $priority = 50): bool
+	public function addNavigationChild(string $parent, string $route, ?string $title = null, int $priority = 50): bool
 	{
 		if($this->hasNavigationChild($parent, $route)) {
 			return false;
@@ -111,6 +209,6 @@ class Haunt
 		$parent = $this->navigation->filter(function($item) {
 			return $item['children']->has(request()->route()->getName());
 		})->first();
-		return $parent ? $parent['children']->sortBy('priority') : collect();
+		return $parent ? $parent['children']->whereNotNull('title')->sortBy('priority') : collect();
 	}
 }

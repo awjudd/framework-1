@@ -1,5 +1,5 @@
 <?php
-namespace Haunt\Extend;
+namespace Haunt\Library\Classes;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
