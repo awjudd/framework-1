@@ -3,10 +3,18 @@ namespace Haunt;
 
 use Haunt\Entities\Models\Plugin;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 
 class Haunt
 {
+	/**
+	 * The path to the auth storage file.
+	 * @var string
+	 */
+	private string $authStorage;
+
 	/**
 	 * The models to register.
 	 * @var array
@@ -19,8 +27,14 @@ class Haunt
 	 */
 	private Collection $navigation;
 
+	/**
+	 * Create a new Haunt instance.
+	 *
+	 * @return void
+	 */
 	public function __construct()
 	{
+		$this->authStorage = storage_path('app/private/auth.json');
 		$this->navigation = collect();
 	}
 
@@ -31,13 +45,57 @@ class Haunt
 	 */
 	public function isInstalled(): bool
 	{
-		$state = true;
+		return boolval(config('haunt.installed'));
+	}
 
-		if(!Schema::hasTable('plugins')) {
-			$state = false;
+	/**
+	 * Check if a database connection can be made.
+	 *
+	 * @return bool
+	 */
+	public function canMakeDatabaseConnection(): bool
+	{
+		try {
+			DB::connection()->getPdo();
+			return true;
+		} catch(\Exception $e) {
+			return false;
 		}
+	}
 
-		return $state;
+	/**
+	 * Check if the site has been setup.
+	 *
+	 * @return bool
+	 */
+	public function hasSetupSite(): bool
+	{
+		return File::exists($this->getAuthStorage());
+	}
+
+	/**
+	 * Set an environment variable.
+	 *
+	 * @param string $name
+	 * @param string $value
+	 * @return void
+	 */
+	public function setEnvironmentValue(string $name, string $value): void
+	{
+		$path = app()->environmentPath().'/'.app()->environmentFile();
+		if(file_exists($path)) {
+			file_put_contents($path, replaceBetween(file_get_contents($path), $name, "\n", "={$value}"));
+		}
+	}
+
+	/**
+	 * Get the auth storage file location.
+	 *
+	 * @return string
+	 */
+	public function getAuthStorage(): string
+	{
+		return $this->authStorage;
 	}
 
 	/**
@@ -194,6 +252,8 @@ class Haunt
 	}
 
 	/**
+	 * Build the main navigation menu.
+	 *
 	 * @return \Illuminate\Support\Collection
 	 */
 	public function navigation(): \Illuminate\Support\Collection
@@ -202,6 +262,8 @@ class Haunt
 	}
 
 	/**
+	 * Build the sub navigation menu.
+	 *
 	 * @return \Illuminate\Support\Collection
 	 */
 	public function menu(): \Illuminate\Support\Collection

@@ -31,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
 		// routes
 		$this->loadRoutesFrom("{$this->root}/routes/game.php");
 		$this->loadRoutesFrom("{$this->root}/routes/admin.php");
+		app('router')->aliasMiddleware('haunt-installed', \Haunt\Http\Middleware\HauntInstalled::class);
 
 		// translations
         $this->loadTranslationsFrom("{$this->root}/resources/lang", 'haunt');

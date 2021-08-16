@@ -7,7 +7,7 @@
         <title>{{ config('app.name') }}</title>
         <link rel="stylesheet" href="{{ asset('/vendor/haunt/css/app.css?v=12') }}">
     </head>
-    <body class="bg-gray-150 max-h-screen min-h-screen text-gray-900 overflow-x-hidden overflow-y-scroll dark:bg-gray-850 dark:text-gray-100">
+    <body {{ $attributes->merge(['class' => "bg-gray-150 max-h-screen min-h-screen text-gray-900 overflow-x-hidden overflow-y-auto dark:bg-gray-850 dark:text-gray-100"]) }}>
 		<!-- navigation -->
 		<div class="border-gray-300 hide-scrollbar overflow-auto text-center dark:border-gray-750 md:border-r md:bottom-0 md:fixed md:top-0 md:w-nav">
 			<x-haunt::navigation.container break="md" class="p-4 space-x-2 md:my-auto" direction="v" inline>
