@@ -2,7 +2,9 @@
 
 namespace Haunt\Commands;
 
+use Illuminate\Support\Str;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 
 class InstallHauntCommand extends Command
 {
@@ -27,7 +29,8 @@ class InstallHauntCommand extends Command
 	 */
 	public function handle()
 	{
-		$this->configCache()
+		$this->updateGuards()
+			 ->configCache()
              ->initMigrations();
 	}
 
@@ -36,7 +39,7 @@ class InstallHauntCommand extends Command
 	 *
 	 * @return \Haunt\Commands\InstallHauntCommand
 	 */
-	private function configCache()
+	private function configCache(): InstallHauntCommand
 	{
 		$this->call('config:cache');
 
@@ -48,9 +51,38 @@ class InstallHauntCommand extends Command
 	 *
 	 * @return \Haunt\Commands\InstallHauntCommand
 	 */
-	private function initMigrations()
+	private function initMigrations(): InstallHauntCommand
 	{
 		$this->call('haunt:migrate');
+
+		return $this;
+	}
+
+	/**
+	 * Add the haunt connection to the database config.
+	 *
+	 * @return \Haunt\Commands\InstallHauntCommand
+	 */
+	private function updateGuards(): InstallHauntCommand
+	{
+		$location = "'guards' => [";
+		$path = config_path('auth.php');
+
+		if(File::exists($path)) {
+			$content = file_get_contents($path);
+
+			// check if the guard already exists
+			if(!Str::contains($content, 'haunt')) {
+				$start = strpos($content, $location) + strlen($location);
+
+				$build = "
+		'haunt' => [
+			'driver' => 'haunt',
+		],
+				";
+				file_put_contents($path, substr_replace($content, $build, $start, 0));
+			}
+		}
 
 		return $this;
 	}
@@ -60,7 +92,7 @@ class InstallHauntCommand extends Command
 	 *
 	 * @return \Haunt\Commands\InstallHauntCommand
 	 */
-	private function installCore()
+	private function installCore(): InstallHauntCommand
 	{
 		$this->call('haunt:install-plugin', [
 			'--package' => 'haunt-pet/plugin-core'

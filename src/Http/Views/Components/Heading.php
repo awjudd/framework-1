@@ -3,9 +3,12 @@
 namespace Haunt\Http\Views\Components;
 
 use Illuminate\View\Component;
+use Haunt\Http\Views\Traits\Content;
 
 class Heading extends Component
 {
+	use Content;
+
     /**
      * The level of heading to use.
      * @var int
@@ -18,8 +21,9 @@ class Heading extends Component
      * @param int $level
      * @return void
      */
-    public function __construct(int $level)
+    public function __construct(?string $content = null, int $level = 2)
     {
+        $this->content = $content;
         $this->level = $level;
     }
 

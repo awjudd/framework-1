@@ -4,6 +4,9 @@ namespace Haunt\Providers;
 use Haunt\Facades\Haunt;
 use Haunt\Entities\Models\Plugin;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Auth;
+use Haunt\Library\Classes\HauntGuard;
+use Haunt\Library\Classes\HauntUserProvider;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
@@ -29,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
 		// routes
 		$this->loadRoutesFrom("{$this->root}/routes/web.php");
 		app('router')->aliasMiddleware('haunt-installed', \Haunt\Http\Middleware\HauntInstalled::class);
+		app('router')->aliasMiddleware('haunt-auth', \Haunt\Http\Middleware\HauntAuth::class);
 
 		// translations
         $this->loadTranslationsFrom("{$this->root}/resources/lang", 'haunt');
@@ -38,6 +42,11 @@ class AppServiceProvider extends ServiceProvider
 
 		// paginator
         Paginator::defaultView('haunt-component::pagination');
+
+		// auth guard
+        Auth::extend('haunt', function($app, $name, $config) {
+            return new HauntGuard($app['request']);
+        });
 
 		Haunt::init();
 	}

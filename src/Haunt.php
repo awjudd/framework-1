@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Schema;
 class Haunt
 {
 	/**
+	 *
+	 */
+	private ?string $authModel = null;
+
+	/**
 	 * The path to the auth storage file.
 	 * @var string
 	 */
@@ -34,6 +39,7 @@ class Haunt
 	 */
 	public function __construct()
 	{
+		$this->authModel = \Haunt\Entities\Models\User::class;
 		$this->authStorage = storage_path('app/private/auth.json');
 		$this->navigation = collect();
 	}
@@ -89,6 +95,26 @@ class Haunt
 	}
 
 	/**
+	 * Get the auth model class.
+	 *
+	 * @return string|null
+	 */
+	public function getAuthModel(): ?string
+	{
+		return $this->authModel;
+	}
+
+	/**
+	 * Set the auth model class.
+	 *
+	 * @return void
+	 */
+	public function setAuthModel(string $class): void
+	{
+		$this->authModel = $class;
+	}
+
+	/**
 	 * Get the auth storage file location.
 	 *
 	 * @return string
@@ -111,7 +137,7 @@ class Haunt
 		$this->addClass('Extend\\Model', \Haunt\Library\Classes\Model::class);
 		$this->addClass('Extend\\Observer', \Haunt\Library\Classes\Observer::class);
 
-		$this->addNavigationParent('admin.index', 'Dashboard', [
+		$this->addNavigationParent('admin.index', __('haunt::dashboard/home.titles.index'), [
 		], 'home', 0);
 		$this->addNavigationParent('admin.appearance.themes.index', __('haunt::appearance/themes.titles.index'), [
 			['route' => 'admin.appearance.plugins.index', 'title' => __('haunt::appearance/plugins.titles.index'), 'priority' => 10],

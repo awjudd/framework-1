@@ -7,6 +7,6 @@ class HomeController extends Controller
 {
 	public function index()
 	{
-		return view('haunt::index');
+		return view('haunt::dashboard.index');
 	}
 }

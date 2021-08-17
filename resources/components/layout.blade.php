@@ -74,7 +74,7 @@
 			<!-- menu -->
 			<div class="border-gray-300 border-b p-4 text-right dark:border-gray-750 md:px-8">
 				<x-haunt::navigation.container inline>
-					test
+					{{ auth()->guard('haunt')->user()->full_username }}
 				</x-haunt::navigation.container>
 			</div>
 		</div>
