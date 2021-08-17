@@ -1,5 +1,5 @@
 {
-	"name": "haunt-pet/haunt",
+	"name": "haunt/framework",
 	"description": "The base package for Haunt.",
 	"type": "package",
 	"license": "proprietary",
