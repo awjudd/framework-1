@@ -42,6 +42,8 @@ class MigrateCommand extends Command
 			return;
 		}
 
+		config(['database.default' => 'haunt']);
+
 		$batch = $this->option('batch') ?? "haunt-pet/haunt";
 		$option = $this->argument('option');
 		$path = $this->option('path') ?? "{$this->root}/database/migrations";

@@ -28,6 +28,10 @@
 		<x-haunt::form.label for="username" :content="__('haunt::install.site.username')" />
 		<x-haunt::form.input name="username" type="text" value="admin" />
 	</x-haunt::grid.column>
+	<!-- core -->
+	<x-haunt::grid.column class="text-center">
+		<x-haunt::form.checkbox :checked="true" :content="__('haunt::install.site.install_core')" name="install_core" />
+	</x-haunt::grid.column>
 	<!-- submit -->
 	<x-haunt::grid.column class="text-right">
 		<x-haunt::form.button theme="success" :content="__('haunt::install.site.submit')" />

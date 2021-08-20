@@ -3,6 +3,7 @@ namespace Haunt\Http\Controllers;
 
 use Haunt\Facades\Haunt;
 use Haunt\Extend\Controller;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Validator;
@@ -33,16 +34,20 @@ class InstallController extends Controller
 					'database_username' => ['required'],
 					'database_password' => ['required'],
 					'database_host' => ['required'],
+					'database_prefix' => ['nullable'],
 				]);
 
 				if($validator->fails()) {
 					return redirect()->back()->withErrors($validator);
 				}
 
-				Haunt::setEnvironmentValue('DB_DATABASE', $validator->validated()['database_name']);
-				Haunt::setEnvironmentValue('DB_USERNAME', $validator->validated()['database_username']);
-				Haunt::setEnvironmentValue('DB_PASSWORD', $validator->validated()['database_password']);
-				Haunt::setEnvironmentValue('DB_HOST', $validator->validated()['database_host']);
+				Haunt::setEnvironmentValue('HAUNT_DB_DATABASE', $validator->validated()['database_name']);
+				Haunt::setEnvironmentValue('HAUNT_DB_USERNAME', $validator->validated()['database_username']);
+				Haunt::setEnvironmentValue('HAUNT_DB_PASSWORD', $validator->validated()['database_password']);
+				Haunt::setEnvironmentValue('HAUNT_DB_HOST', $validator->validated()['database_host']);
+				Haunt::setEnvironmentValue('HAUNT_DB_PREFIX', $validator->validated()['database_prefix']);
+
+				Artisan::call('haunt:install');
 
 				return redirect()->back();
 			}
@@ -53,6 +58,7 @@ class InstallController extends Controller
 					'password' => ['required', 'min:8'],
 					'date_of_birth' => ['required', 'date'],
 					'username' => ['required', 'min:3', 'max:15'],
+					'install_core' => ['in:on,off'],
 				]);
 
 				if($validator->fails()) {
@@ -68,11 +74,22 @@ class InstallController extends Controller
 					'username' => $validator->validated()['username'],
 				];
 
+				$directory = File::dirname(Haunt::getAuthStorage());
+				if(!File::isDirectory($directory)) {
+					File::makeDirectory($directory);
+				}
+
 				file_put_contents(Haunt::getAuthStorage(), json_encode($auth));
 
-				Artisan::call('haunt:install');
-
 				Haunt::setEnvironmentValue('HAUNT_INSTALLED', true);
+
+				Artisan::call('config:cache');
+
+				if($validator->validated()['install_core'] === 'on') {
+					Artisan::call('haunt:install-plugin', [
+						'--package' => 'haunt/plugin-core'
+					]);
+				}
 
 				return redirect()->back();
 			}

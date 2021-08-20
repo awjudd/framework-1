@@ -61,6 +61,8 @@ class Haunt
 	 */
 	public function canMakeDatabaseConnection(): bool
 	{
+		config(['database.default' => 'haunt']);
+
 		try {
 			DB::connection()->getPdo();
 			return true;
@@ -137,9 +139,9 @@ class Haunt
 		$this->addClass('Extend\\Model', \Haunt\Library\Classes\Model::class);
 		$this->addClass('Extend\\Observer', \Haunt\Library\Classes\Observer::class);
 
-		$this->addNavigationParent('admin.index', __('haunt::dashboard/home.titles.index'), [
+		$this->addNavigationParent('dashboard', 'admin.index', __('haunt::dashboard/home.titles.index'), [
 		], 'home', 0);
-		$this->addNavigationParent('admin.appearance.themes.index', __('haunt::appearance/themes.titles.index'), [
+		$this->addNavigationParent('appearance', 'admin.appearance.themes.index', __('haunt::appearance/themes.titles.index'), [
 			['route' => 'admin.appearance.plugins.index', 'title' => __('haunt::appearance/plugins.titles.index'), 'priority' => 10],
 			['route' => 'admin.appearance.plugins.create'],
 		], 'color-swatch', 100);
@@ -208,6 +210,7 @@ class Haunt
 	/**
 	 * Add a navigation parent item.
 	 *
+	 * @param string $slug
 	 * @param string $route
 	 * @param string $title
 	 * @param array $children
@@ -215,13 +218,13 @@ class Haunt
 	 * @param int $priority
 	 * @return bool
 	 */
-	public function addNavigationParent(string $route, string $title, array $children = [], string $icon = 'home', int $priority = 50): bool
+	public function addNavigationParent(string $slug, string $route, string $title, array $children = [], string $icon = 'home', int $priority = 50): bool
 	{
 		if($this->hasNavigationParent($route)) {
 			return false;
 		}
 
-		$this->navigation->put($route, [
+		$this->navigation->put($slug, [
 			'route' => $route,
 			'title' => $title,
 			'children' => collect(),
@@ -229,9 +232,9 @@ class Haunt
 			'priority' => $priority
 		]);
 
-		$this->addNavigationChild($route, $route, $title, 0);
+		$this->addNavigationChild($slug, $route, $title, 0);
 		foreach($children as $child) {
-			$this->addNavigationChild($route, $child['route'], $child['title'] ?? null, $child['priority'] ?? 50);
+			$this->addNavigationChild($slug, $child['route'], $child['title'] ?? null, $child['priority'] ?? 50);
 		}
 
 		return true;

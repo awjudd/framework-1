@@ -3,11 +3,15 @@
 	"description": "The base package for Haunt.",
 	"type": "package",
 	"license": "proprietary",
+    "repositories": [
+        { "type": "path", "url": "../../packages/laravel-blade-tiptap" }
+    ],
 	"require": {
 		"php": "^8.0",
 		"laravel/framework": "^8.52",
 		"blade-ui-kit/blade-heroicons": "^1.2",
-		"lumite-studios/action": "^2.6"
+		"lumite-studios/action": "^2.6",
+		"lumite-studios/laravel-blade-tiptap": "dev-main"
 	},
 	"autoload": {
 		"psr-4": {

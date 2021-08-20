@@ -7,6 +7,7 @@ return [
 		'database_username' => 'Database Username',
 		'database_password' => 'Database Password',
 		'database_host' => 'Database Host',
+		'database_prefix' => 'Database Prefix',
 		'submit' => 'Submit',
 	],
 
@@ -18,6 +19,7 @@ return [
 		'password' => 'Password',
 		'date_of_birth' => 'Date of Birth',
 		'username' => 'Username',
+		'install_core' => 'Install the "haunt/plugin-core" package?',
 		'submit' => 'Submit',
 	],
 ];

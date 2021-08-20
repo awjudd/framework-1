@@ -23,6 +23,11 @@
 		<x-haunt::form.label for="database_host" :content="__('haunt::install.database.database_host')" />
 		<x-haunt::form.input name="database_host" type="text" value="localhost" />
 	</x-haunt::grid.column>
+	<!-- database_prefix -->
+	<x-haunt::grid.column>
+		<x-haunt::form.label for="database_prefix" :content="__('haunt::install.database.database_prefix')" />
+		<x-haunt::form.input name="database_prefix" type="text" value="hnt_" />
+	</x-haunt::grid.column>
 	<!-- submit -->
 	<x-haunt::grid.column class="text-right">
 		<x-haunt::form.button theme="success" :content="__('haunt::install.database.submit')" />

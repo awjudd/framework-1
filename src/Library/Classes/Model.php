@@ -5,6 +5,13 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 
 class Model extends Eloquent
 {
+    /**
+     * The connection name for the model.
+     *
+     * @var string|null
+     */
+    protected $connection= 'haunt';
+
 	/**
 	 * The "booting" method of the model.
 	 *

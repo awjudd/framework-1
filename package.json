@@ -10,6 +10,8 @@
         "production": "mix --production"
     },
     "devDependencies": {
+        "autoprefixer": "^10.3.1",
+        "codemirror": "^5.62.2",
         "laravel-mix": "^6.0.6",
         "resolve-url-loader": "^4.0.0",
         "sass": "^1.35.2",
@@ -17,6 +19,8 @@
         "tailwindcss": "^2.2.4"
     },
     "dependencies": {
-        "autoprefixer": "^10.3.1"
+        "@tiptap/core": "^2.0.0-beta.99",
+        "@tiptap/starter-kit": "^2.0.0-beta.97",
+        "alpinejs": "^3.2.3"
     }
 }

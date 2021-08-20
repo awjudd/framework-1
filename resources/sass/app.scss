@@ -2,6 +2,13 @@
 
 @tailwind components;
 
+@import '~codemirror/lib/codemirror.css';
+@import '~codemirror/theme/nord.css';
+
+.CodeMirror {
+    @apply h-auto p-4;
+}
+
 input[type='checkbox'] {
 	@apply dark:border-gray-700;
 	&:checked {

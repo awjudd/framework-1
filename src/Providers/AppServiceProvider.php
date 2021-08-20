@@ -3,7 +3,6 @@ namespace Haunt\Providers;
 
 use Haunt\Facades\Haunt;
 use Haunt\Entities\Models\Plugin;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Haunt\Library\Classes\HauntGuard;
 use Haunt\Library\Classes\HauntUserProvider;
@@ -30,18 +29,15 @@ class AppServiceProvider extends ServiceProvider
 		$this->publishes(["{$this->root}/config/haunt.php" => config_path('haunt.php')], 'haunt');
 
 		// routes
-		$this->loadRoutesFrom("{$this->root}/routes/web.php");
 		app('router')->aliasMiddleware('haunt-installed', \Haunt\Http\Middleware\HauntInstalled::class);
 		app('router')->aliasMiddleware('haunt-auth', \Haunt\Http\Middleware\HauntAuth::class);
+		$this->loadRoutesFrom("{$this->root}/routes/web.php");
 
 		// translations
         $this->loadTranslationsFrom("{$this->root}/resources/lang", 'haunt');
 
 		// assets
-        $this->publishes(["{$this->root}/resources/dist" => public_path('vendor/haunt')], 'haunt');
-
-		// paginator
-        Paginator::defaultView('haunt-component::pagination');
+        $this->publishes(["{$this->root}/resources/dist" => public_path('haunt')], 'haunt');
 
 		// auth guard
         Auth::extend('haunt', function($app, $name, $config) {

@@ -8,6 +8,7 @@ module.exports = {
         './resources/**/*.blade.php',
         './resources/**/*.js',
         './resources/**/*.vue',
+        './vendor/georgeboot/laravel-tiptap/resources/views/**/*.blade.php',
     ],
 
     theme: {
@@ -21,6 +22,7 @@ module.exports = {
 				},
 				primary: '#009990'
 			},
+			minHeight: theme => theme('height'),
 			minWidth: theme => theme('width'),
 			spacing: {
 				nav: defaultTheme.spacing[20],

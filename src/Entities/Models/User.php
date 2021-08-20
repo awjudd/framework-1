@@ -1,12 +1,10 @@
 <?php
 namespace Haunt\Entities\Models;
 
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Haunt\Library\Classes\Authenticatable;
 
 class User extends Authenticatable
 {
-    protected $guarded = [];
-
 	/**
 	 * The database table used by the model.
 	 * @var string

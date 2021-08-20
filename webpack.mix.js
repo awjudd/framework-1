@@ -11,4 +11,4 @@ mix.sass(`${source}/sass/app.scss`, `${distribute}/css`).options({
         tailwindcss('./tailwind.config.js'),
         require('autoprefixer')
     ],
-}).version()
+}).js(`${source}/js/app.js`, `${distribute}/js`).version()

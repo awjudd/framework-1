@@ -1,6 +1,7 @@
 <?php
 namespace Haunt\Providers;
 
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
@@ -25,5 +26,8 @@ class ViewServiceProvider extends ServiceProvider
 		// components
 		$this->loadViewsFrom("{$this->root}/resources/components", 'haunt-component');
 		Blade::componentNamespace('Haunt\\Http\\Views\\Components', 'haunt');
+
+		// paginator
+        Paginator::defaultView('haunt-component::pagination');
 	}
 }
