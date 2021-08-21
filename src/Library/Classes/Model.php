@@ -10,7 +10,7 @@ class Model extends Eloquent
      *
      * @var string|null
      */
-    protected $connection= 'haunt';
+    protected $connection = 'haunt';
 
 	/**
 	 * The "booting" method of the model.
@@ -21,7 +21,6 @@ class Model extends Eloquent
 	{
 		parent::boot();
 		Model::unguard();
-		Model::preventLazyLoading();
 	}
 
     /**

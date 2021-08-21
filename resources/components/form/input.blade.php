@@ -1,1 +1,1 @@
-<input {{ $attributes->merge(['class' => "bg-white border h-10 px-3 py-2 rounded text-sm w-full dark:bg-gray-900 dark:border-gray-700 {$applyMargin()}"]) }} />
+<input {{ $attributes->merge(['class' => "border h-10 px-3 py-2 rounded text-sm w-full {$applyMargin()} {$applyDisabled('dark:bg-gray-700 dark:border-gray-700', 'bg-white dark:bg-gray-900 dark:border-gray-700')}"]) }} />

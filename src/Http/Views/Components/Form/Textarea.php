@@ -4,22 +4,26 @@ namespace Haunt\Http\Views\Components\Form;
 
 use Illuminate\View\Component;
 use Haunt\Http\Views\Traits\Margin;
+use Haunt\Http\Views\Traits\Content;
 use Haunt\Http\Views\Traits\Disabled;
 
-class Input extends Component
+class Textarea extends Component
 {
+	use Content;
 	use Disabled;
 	use Margin;
 
     /**
      * Create a new component instance.
      *
+     * @param string|null $content
 	 * @param bool $disabled
 	 * @param bool $margin
      * @return void
      */
-    public function __construct(bool $disabled = false, bool $margin = false)
+    public function __construct(?string $content = null, bool $disabled = false, bool $margin = false)
     {
+        $this->content = $content;
         $this->disabled = $disabled;
         $this->margin = $margin;
     }
@@ -31,6 +35,6 @@ class Input extends Component
      */
     public function render()
     {
-        return view('haunt-component::form.input');
+        return view('haunt-component::form.textarea');
     }
 }

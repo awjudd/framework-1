@@ -21,6 +21,5 @@ class Authenticatable extends AuthUser
 	{
 		parent::boot();
 		Model::unguard();
-		Model::preventLazyLoading();
 	}
 }

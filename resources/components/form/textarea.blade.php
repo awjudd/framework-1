@@ -1,0 +1,1 @@
+<textarea {{ $attributes->merge(['class' => "border px-3 py-2 rounded text-sm w-full {$applyMargin()} {$applyDisabled('dark:bg-gray-700 dark:border-gray-700', 'bg-white dark:bg-gray-900 dark:border-gray-700')}"]) }}>{{ $content ?? $slot }}</textarea>
