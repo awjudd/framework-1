@@ -1,6 +1,6 @@
 {
 	"name": "haunt/framework",
-	"description": "The base package for Haunt.",
+	"description": "Haunt: The base package.",
 	"type": "package",
 	"license": "proprietary",
     "repositories": [
