@@ -12,6 +12,7 @@ return [
 	'submits' => [
 		'create' => 'Create',
 		'edit' => 'Save Changes',
+		'preview' => 'Preview',
 	],
 
 	'text' => [

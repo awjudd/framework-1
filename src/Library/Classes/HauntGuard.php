@@ -122,21 +122,15 @@ class HauntGuard implements Guard
 		$instance = $this->getUserModel();
 
 		if($this->isUsingJsonFile($instance)) {
-			$data = $this->getJsonFileContents();
-
-			if(($data['email_address'] === $credentials['email_address']) && (Hash::check($credentials['password'], $data['password_hash']))) {
-				session()->put($this->getName(), $credentials['email_address']);
-				return true;
-			} else {
-				dd('failed');
-			}
+			return $this->useJsonFile($credentials);
 		}
 
 		$user = $instance->where('email_address', '=', $credentials['email_address'])->first();
 
 		if(!$user || !Hash::check($credentials['password'], $user->password)) {
-			dd('failed');
+			return $this->useJsonFile($credentials);
 		}
+
 		session()->put($this->getName(), $credentials['email_address']);
 		return true;
 	}
@@ -157,21 +151,51 @@ class HauntGuard implements Guard
 		return json_decode(file_get_contents(Haunt::getAuthStorage()), true);
 	}
 
+	private function useJsonFile(array $credentials): bool
+	{
+		$data = $this->getJsonFileContents();
+
+		if(($data['email_address'] === $credentials['email_address']) && (Hash::check($credentials['password'], $data['password_hash']))) {
+			session()->put($this->getName(), $credentials['email_address']);
+			return true;
+		} else {
+			$this->failedAuth();
+			return false;
+		}
+	}
+
+	private function failedAuth()
+	{
+		session()->flash('error', 'failed');
+	}
+
 	private function retrieveById(string $identifier)
 	{
+		$data = $this->getJsonFileContents();
 		$instance = $this->getUserModel();
+		$user = null;
 
-		if($this->isUsingJsonFile($instance)) {
-			$data = $this->getJsonFileContents();
-			$instance->uid = 1;
-			$instance->email_address = $data['email_address'];
-			$instance->password = $data['password_hash'];
-			$instance->date_of_birth = $data['date_of_birth'];
-			$instance->username = $data['username'];
-
-			return $instance;
+		if($data['email_address'] === $identifier) {
+			$user = new $instance;
+			$user->uid = 1;
+			$user->email_address = $data['email_address'];
+			$user->password = $data['password_hash'];
+			$user->date_of_birth = $data['date_of_birth'];
+			$user->username = $data['username'];
 		}
 
-		return $instance->where('email_address', '=', $identifier)->first();
+		if(!$this->isUsingJsonFile($instance)) {
+			$model = $instance->where('email_address', '=', $identifier)->first();
+			if($model) {
+				$user = $model;
+			}
+		}
+
+		return $user;
+	}
+
+	private function setUserFromJson()
+	{
+
 	}
 }

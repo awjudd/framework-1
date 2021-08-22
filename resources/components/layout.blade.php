@@ -54,9 +54,15 @@
 					</x-haunt::alert>
 				@endif
 
+				@if(session()->has('error'))
+					<x-haunt::alert theme="error">
+						{{ session()->pull('error') }}
+					</x-haunt::alert>
+				@endif
+
 				@if(session()->has('success'))
 					<x-haunt::alert theme="success">
-						{{ session()->get('success') }}
+						{{ session()->pull('success') }}
 					</x-haunt::alert>
 				@endif
 
