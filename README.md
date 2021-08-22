@@ -7,3 +7,6 @@
 
 ## Installation
 `composer require haunt/framework`
+
+## Todo
+- [ ] Update the WYSIWYG Editor
