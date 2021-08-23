@@ -11,7 +11,8 @@
 		"laravel/framework": "^8.52",
 		"blade-ui-kit/blade-heroicons": "^1.2",
 		"lumite-studios/action": "^2.6",
-		"lumite-studios/laravel-blade-tiptap": "dev-main"
+		"lumite-studios/laravel-blade-tiptap": "dev-main",
+		"livewire/livewire": "^2.5"
 	},
 	"autoload": {
 		"psr-4": {

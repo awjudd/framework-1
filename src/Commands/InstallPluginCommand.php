@@ -34,22 +34,28 @@ class InstallPluginCommand extends Command
 	{
 		$package = $this->option('package');
 
-		// check if the plugin is already installed
-		if(Plugin::where('package', '=', $package)->first()) {
-			$this->output->writeln("<comment>Plugin Already Installed:</> {$package}");
-			return;
-		}
-
 		// TODO: install package from composer
+		$version = '1.0.1';
 
-		// create a plugin instance
-		$plugin = new Plugin;
-		$plugin->package = $package;
-		$plugin->main = 'HauntCore\\Plugin';
-		$plugin->name = 'HauntCore';
-		$plugin->version = '1.0.0';
-		$plugin->priority = '1';
-		$plugin->active = true;
+		// check if the plugin is already installed
+		if($plugin = Plugin::where('package', '=', $package)->first()) {
+			// is the version already installed?
+			if($plugin->version === $version) {
+				$this->output->writeln("<comment>Plugin Already Installed:</> {$package}");
+				return;
+			} else {
+				$plugin->version = $version;
+			}
+		} else {
+			// create a plugin instance
+			$plugin = new Plugin;
+			$plugin->package = $package;
+			$plugin->main = 'HauntCore\\Plugin';
+			$plugin->name = 'HauntCore';
+			$plugin->version = '1.0.0';
+			$plugin->priority = '1';
+			$plugin->active = true;
+		}
 
 		$instance = $plugin->instance();
 
@@ -71,7 +77,6 @@ class InstallPluginCommand extends Command
 			return;
 		}
 
-		// save the plugin model
 		$plugin->save();
 
 		$this->output->writeln("<info>Plugin Installed:</info> {$plugin->package}");

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "95cf78ecc4e152397cf3d782f004ddfd",
+    "content-hash": "58c0ea882fc163f19ce4fff4b4aa7780",
     "packages": [
         {
             "name": "blade-ui-kit/blade-heroicons",
@@ -1289,7 +1289,7 @@
             "dist": {
                 "type": "path",
                 "url": "../../packages/laravel-blade-tiptap",
-                "reference": "d367a54ba00dcc27a0a41dac9f29ef4d5b7cce10"
+                "reference": "eb81e9e0118fc2d65fe7d684f2f90756d5b4fe51"
             },
             "require": {
                 "laravel/framework": "^8.55",
@@ -1297,6 +1297,13 @@
                 "php": "^8.0"
             },
             "type": "package",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "LumiteStudios\\LaravelBladeTiptap\\LaravelBladeTiptapServiceProvider"
+                    ]
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "LumiteStudios\\LaravelBladeTiptap\\": "src"

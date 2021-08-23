@@ -1,6 +1,7 @@
 <?php
 namespace Haunt\Providers;
 
+use Livewire\Livewire;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
@@ -29,5 +30,8 @@ class ViewServiceProvider extends ServiceProvider
 
 		// paginator
         Paginator::defaultView('haunt-component::pagination');
+
+		// livewire
+		Livewire::component('repeatable-component', \Haunt\Http\Components\RepeatableComponent::class);
 	}
 }

@@ -7,6 +7,7 @@
         <title>{{ config('app.name') }}</title>
         <link rel="stylesheet" href="{{ asset('/haunt/css/app.css?v=1.3') }}">
 		<script src="https://kit.fontawesome.com/0c87cf92b4.js" crossorigin="anonymous"></script>
+    	@livewireStyles
     </head>
     <body {{ $attributes->merge(['class' => "bg-gray-150 max-h-screen min-h-screen text-gray-900 overflow-x-hidden overflow-y-auto dark:bg-gray-850 dark:text-gray-100"]) }}>
 		<!-- navigation -->
@@ -87,5 +88,6 @@
 		</div>
 
 		<script src="{{ asset('/vendor/laravel-blade-tiptap/js/app.js?v=1.0') }}"></script>
+    	@livewireScripts
 	</body>
 </html>
