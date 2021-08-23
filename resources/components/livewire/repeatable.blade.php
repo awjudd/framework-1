@@ -11,7 +11,7 @@
 
 	@if(count($items) === 0)
 		<div class="text-center dark:text-gray-500">
-			There are no fields to display.
+			There are no {{ $title }} to display.
 		</div>
 	@else
 		@foreach($items as $index => $item)
@@ -20,7 +20,7 @@
 					<x-heroicon-o-x class="h-4 w-4" />
 				</x-haunt::form.button>
 				<div class="flex-grow">
-					<livewire:repeatable-view-component :index="$index" :view="$view" :wire:key="$item" />
+					<livewire:repeatable-view-component :data="$item" :index="$index" :view="$view" :wire:key="$item['id']" />
 				</div>
 				<div class="flex flex-col">
 					<x-haunt::form.button class="rounded-b-none" dense wire:click.prevent="moveUp({{ $index }})">

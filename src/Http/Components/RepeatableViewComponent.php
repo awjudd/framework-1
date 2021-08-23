@@ -5,6 +5,16 @@ use Livewire\Component;
 
 class RepeatableViewComponent extends Component
 {
+	/**
+	 * The data to pass to the view.
+	 * @var array
+	 */
+	public array $data;
+
+	/**
+	 * The unique item index.
+	 * @var int
+	 */
 	public int $index;
 
 	/**
@@ -13,9 +23,10 @@ class RepeatableViewComponent extends Component
 	 */
 	public string $view;
 
-    public function mount(int $index = 0, string $view)
+    public function mount(string $view, array $data = [], int $index = 0)
     {
         $this->index = $index;
+        $this->data = $data;
         $this->view = $view;
     }
 

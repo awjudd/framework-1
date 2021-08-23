@@ -23,8 +23,12 @@ class RepeatableComponent extends Component
 	 */
 	public string $view;
 
-    public function mount(?string $title = null, string $view)
+    public function mount(string $view, array $items = [], ?string $title = null)
     {
+        $this->items = collect($items)->map(function($item, $key) {
+			$item['id'] = 'item-'.$key;
+			return $item;
+		})->toArray();
         $this->title = $title;
         $this->view = $view;
     }
@@ -36,7 +40,7 @@ class RepeatableComponent extends Component
 
 	public function addItem()
 	{
-		$this->items[] = 'item-'.count($this->items);
+		$this->items[] = ['id' => 'item-'.count($this->items)];
 	}
 
 	public function removeItem(int $index)
