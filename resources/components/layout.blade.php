@@ -87,7 +87,7 @@
 			</div>
 		</div>
 
-		<script src="{{ asset('/vendor/laravel-blade-tiptap/js/app.js?v=1.0') }}"></script>
     	@livewireScripts
+		<script src="{{ asset('/vendor/laravel-blade-tiptap/js/app.js?v=1.0') }}"></script>
 	</body>
 </html>

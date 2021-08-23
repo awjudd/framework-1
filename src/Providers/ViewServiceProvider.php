@@ -33,5 +33,6 @@ class ViewServiceProvider extends ServiceProvider
 
 		// livewire
 		Livewire::component('repeatable-component', \Haunt\Http\Components\RepeatableComponent::class);
+		Livewire::component('repeatable-view-component', \Haunt\Http\Components\RepeatableViewComponent::class);
 	}
 }

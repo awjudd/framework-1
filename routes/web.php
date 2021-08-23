@@ -36,6 +36,6 @@ Route::group(['middleware' => ['web']], function() {
 			});
 		});
 
-		Route::any('/{any}', [ErrorController::class, 'index'])->where('any', '.*')->name('error');
+		Route::any('/{any}', [ErrorController::class, 'index'])->where('any', '^(?!livewire).*$')->name('error');
 	});
 });

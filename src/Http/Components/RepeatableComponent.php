@@ -5,11 +5,27 @@ use Livewire\Component;
 
 class RepeatableComponent extends Component
 {
-	public array $items;
+	/**
+	 * The items created.
+	 * @var array
+	 */
+	public array $items = [];
+
+	/**
+	 * The title of the component.
+	 * @var string|null
+	 */
+	public ?string $title;
+
+	/**
+	 * The view to repeat.
+	 * @var string
+	 */
 	public string $view;
 
-    public function mount(string $view)
+    public function mount(?string $title = null, string $view)
     {
+        $this->title = $title;
         $this->view = $view;
     }
 
@@ -18,8 +34,28 @@ class RepeatableComponent extends Component
         return view('haunt-component::livewire.repeatable');
 	}
 
-	public function add()
+	public function addItem()
 	{
-		$this->items[] = ['test'];
+		$this->items[] = 'item-'.count($this->items);
+	}
+
+	public function removeItem(int $index)
+	{
+		unset($this->items[$index]);
+	}
+
+	public function moveUp(int $index)
+	{
+		$this->moveElement($index, $index-1);
+	}
+
+	public function moveDown(int $index)
+	{
+		$this->moveElement($index, $index+1);
+	}
+
+	private function moveElement($start, $end) {
+		$out = array_splice($this->items, $start, 1);
+		array_splice($this->items, $end, 0, $out);
 	}
 }
