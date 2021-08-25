@@ -12,7 +12,7 @@
 		"blade-ui-kit/blade-heroicons": "^1.2",
 		"lumite-studios/action": "^2.6",
 		"lumite-studios/laravel-blade-tiptap": "dev-main",
-		"livewire/livewire": "^2.5"
+		"lumite-studios/livewire-repeatable": "^1.0"
 	},
 	"autoload": {
 		"psr-4": {
