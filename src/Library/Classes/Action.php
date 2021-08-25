@@ -19,6 +19,7 @@ abstract class Action extends BaseAction
 	public function __construct(array $data = [])
 	{
 		config(['database.default' => 'haunt']);
+		config(['auth.defaults.guard' => 'haunt']);
 
 		parent::__construct($data);
 	}
