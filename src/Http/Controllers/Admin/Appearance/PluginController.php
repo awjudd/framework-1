@@ -43,7 +43,7 @@ class PluginController extends Controller
 		$package = $request->input('package');
 
 		Artisan::call('haunt:install-plugin', [
-			'--package' => $package
+			'--plugin' => $package
 		]);
 
 		return redirect()->back();

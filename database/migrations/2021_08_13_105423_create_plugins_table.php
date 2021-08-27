@@ -15,12 +15,13 @@ class CreatePluginsTable extends Migration
     {
         Schema::create('plugins', function (Blueprint $table) {
             $table->id();
-			$table->string('package')->unique();
+			$table->string('plugin')->unique();
 			$table->string('main');
 			$table->string('name');
 			$table->string('version');
 			$table->integer('priority');
 			$table->boolean('active')->default(true);
+			$table->json('requires');
             $table->timestamps();
         });
     }

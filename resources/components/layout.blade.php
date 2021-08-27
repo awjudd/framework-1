@@ -15,8 +15,8 @@
 			<x-haunt::navigation.container break="md" class="p-4 space-x-2 md:my-auto" direction="v" inline>
 				@foreach(Haunt::navigation() as $item)
 					<x-haunt::navigation.icon
-						:active="$item['children']->where('route', request()->route()->getName())->first() !== null"
-						:href="route($item['route'])"
+						:active="$item['active']->contains(request()->route()->getName())"
+						:href="route($item['children']->sortBy('priority')->first()['route'])"
 					>
 						<x-dynamic-component
 							:component="'heroicon-o-'.$item['icon']"
@@ -34,7 +34,7 @@
 				<x-haunt::navigation.container inline>
 					@foreach(Haunt::menu() as $item)
 						<x-haunt::navigation.text
-							:active="$item['route'] === request()->route()->getName()"
+							:active="$item['active']->contains(request()->route()->getName())"
 							:href="route($item['route'])"
 						>
 							{{ $item['title'] }}

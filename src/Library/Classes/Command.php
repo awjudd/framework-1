@@ -1,6 +1,8 @@
 <?php
-namespace Haunt\Library;
+namespace Haunt\Library\Classes;
 
+use Haunt\Library\Classes\Composer;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Console\Command as BaseCommand;
 
 class Command extends BaseCommand
@@ -9,19 +11,19 @@ class Command extends BaseCommand
      * The filesystem instance.
      * @var \Illuminate\Filesystem\Filesystem
      */
-    protected \Illuminate\Filesystem\Filesystem $files;
+    protected Filesystem $files;
 
     /**
      * The filesystem instance.
-     * @var \Illuminate\Support\Composer
+     * @var \Haunt\Library\Classes\Composer
      */
-    protected \Illuminate\Support\Composer $composer;
+    protected Composer $composer;
 
 	/**
 	 * The direct path.
 	 * @var string
 	 */
-	protected $root = __DIR__.'/../..';
+	protected $root = __DIR__.'/../../../';
 
 	/**
 	 * The location of the stubs.
@@ -33,10 +35,10 @@ class Command extends BaseCommand
      * Create a new controller creator command instance.
      *
      * @param \Illuminate\Filesystem\Filesystem $files
-     * @param \Illuminate\Support\Composer $composer
+     * @param \Haunt\Library\Classes\Composer $composer
      * @return void
      */
-    public function __construct(\Illuminate\Filesystem\Filesystem $files, \Illuminate\Support\Composer $composer)
+    public function __construct(Filesystem $files, Composer $composer)
     {
         parent::__construct();
         $this->composer = $composer;

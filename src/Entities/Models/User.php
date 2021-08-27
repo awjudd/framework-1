@@ -20,4 +20,14 @@ class User extends Authenticatable
 	{
 		return "{$this->username}";
 	}
+
+	/**
+	 * Check if the user is an administrator.
+	 *
+	 * @return bool
+	 */
+	public function isAdministrator(bool $state = true): bool
+	{
+		return true;
+	}
 }

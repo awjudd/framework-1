@@ -22,10 +22,11 @@ Route::group(['middleware' => ['web']], function() {
 
 				if(Haunt::isInstalled()) {
 					Plugin::active(true)->get()->each(function($item) {
-						$instance = $item->instance();
-						if(File::exists($instance->routes['admin'])) {
-							require_once($instance->routes['admin']);
-						}
+						$item->instances()->each(functioN($instance) {
+							if(File::exists($instance->routes['admin'])) {
+								require_once($instance->routes['admin']);
+							}
+						});
 					});
 				}
 			});

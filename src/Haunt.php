@@ -6,9 +6,12 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
+use Haunt\Library\Traits\Haunt\Navigation;
 
 class Haunt
 {
+	use Navigation;
+
 	/**
 	 *
 	 */
@@ -25,12 +28,6 @@ class Haunt
 	 * @var array
 	 */
 	private array $classes;
-
-	/**
-	 * The admin navigation.
-	 * @var \Illuminate\Support\Collection
-	 */
-	private Collection $navigation;
 
 	/**
 	 * Create a new Haunt instance.
@@ -139,12 +136,15 @@ class Haunt
 		$this->addClass('Extend\\Model', \Haunt\Library\Classes\Model::class);
 		$this->addClass('Extend\\Observer', \Haunt\Library\Classes\Observer::class);
 
-		$this->addNavigationParent('dashboard', 'admin.index', __('haunt::dashboard/home.titles.index'), [
-		], 'home', 0);
-		$this->addNavigationParent('appearance', 'admin.appearance.themes.index', __('haunt::appearance/themes.titles.index'), [
-			['route' => 'admin.appearance.plugins.index', 'title' => __('haunt::appearance/plugins.titles.index'), 'priority' => 10],
-			['route' => 'admin.appearance.plugins.create'],
-		], 'color-swatch', 100);
+		$this->addNavigationParent('dashboard', 'home', [], 0);
+		$this->addNavigationParent('appearance', 'color-swatch', [
+			['route' => 'admin.appearance.themes.index', 'title' => __('haunt::appearance/themes.titles.index'), 'priority' => 10, 'active' => [
+
+			]],
+			['route' => 'admin.appearance.plugins.index', 'title' => __('haunt::appearance/plugins.titles.index'), 'priority' => 20, 'active' => [
+				'admin.appearance.plugins.create'
+			]],
+		], 100);
 	}
 
 	/**
@@ -160,21 +160,23 @@ class Haunt
 			$plugins = Plugin::active()->priority()->get();
 
 			$plugins->each(function($item) {
-				$instance = $item->instance();
-				if($instance->views !== null) {
-					app('view')->addNamespace($instance->slug, $instance->views);
-				}
-				if($instance->translations !== null) {
-					app('translator')->addNamespace($instance->slug, $instance->translations);
-				}
-				$this->classes = array_merge($this->classes, $instance->classes);
+				$item->instances()->each(functioN($instance) {
+					if($instance->views !== null) {
+						app('view')->addNamespace($instance->slug, $instance->views);
+					}
+					if($instance->translations !== null) {
+						app('translator')->addNamespace($instance->slug, $instance->translations);
+					}
+					$this->classes = array_merge($this->classes, $instance->classes);
+				});
 			});
 
 			$this->registerClasses();
 
 			$plugins->each(function($item) {
-				$instance = $item->instance();
-				$instance->init();
+				$item->instances()->each(functioN($instance) {
+					$instance->init();
+				});
 			});
 		} else {
 			$this->registerClasses();
@@ -205,108 +207,5 @@ class Haunt
 	public function addClass(string $name, string $class): void
 	{
 		$this->classes[$name] = $class;
-	}
-
-	/**
-	 * Add a navigation parent item.
-	 *
-	 * @param string $slug
-	 * @param string $route
-	 * @param string $title
-	 * @param array $children
-	 * @param string $icon
-	 * @param int $priority
-	 * @return bool
-	 */
-	public function addNavigationParent(string $slug, string $route, string $title, array $children = [], string $icon = 'home', int $priority = 50): bool
-	{
-		if($this->hasNavigationParent($route)) {
-			return false;
-		}
-
-		$this->navigation->put($slug, [
-			'route' => $route,
-			'title' => $title,
-			'children' => collect(),
-			'icon' => $icon,
-			'priority' => $priority
-		]);
-
-		$this->addNavigationChild($slug, $route, $title, 0);
-		foreach($children as $child) {
-			$this->addNavigationChild($slug, $child['route'], $child['title'] ?? null, $child['priority'] ?? 50);
-		}
-
-		return true;
-	}
-
-	/**
-	 * Add a navigation child to a parent.
-	 *
-	 * @param string $parent
-	 * @param string $route
-	 * @param string $title
-	 * @param int $priority
-	 * @return bool
-	 */
-	public function addNavigationChild(string $parent, string $route, ?string $title = null, int $priority = 50): bool
-	{
-		if($this->hasNavigationChild($parent, $route)) {
-			return false;
-		}
-
-		$this->navigation->get($parent)['children']->put($route, [
-			'route' => $route,
-			'title' => $title,
-			'priority' => $priority,
-		]);
-
-		return true;
-	}
-
-	/**
-	 * Check if a navigation parent exists.
-	 *
-	 * @param string $route
-	 * @return bool
-	 */
-	public function hasNavigationParent(string $route): bool
-	{
-		return $this->navigation->has($route);
-	}
-
-	/**
-	 * Check if a navigation child exists.
-	 *
-	 * @param string $parent
-	 * @param string $route
-	 * @return bool
-	 */
-	public function hasNavigationChild(string $parent, string $route): bool
-	{
-		return !$this->navigation->has($parent) || ($this->navigation->get($parent)['children']->has($route));
-	}
-
-	/**
-	 * Build the main navigation menu.
-	 *
-	 * @return \Illuminate\Support\Collection
-	 */
-	public function navigation(): \Illuminate\Support\Collection
-	{
-		return $this->navigation->sortBy('priority');
-	}
-
-	/**
-	 * Build the sub navigation menu.
-	 *
-	 * @return \Illuminate\Support\Collection
-	 */
-	public function menu(): \Illuminate\Support\Collection
-	{
-		$parent = $this->navigation->filter(function($item) {
-			return $item['children']->has(request()->route()->getName());
-		})->first();
-		return $parent ? $parent['children']->whereNotNull('title')->sortBy('priority') : collect();
 	}
 }

@@ -1,7 +1,7 @@
 <?php
 namespace Haunt\Commands;
 
-use Haunt\Library\Command;
+use Haunt\Library\Classes\Command;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -44,7 +44,7 @@ class MigrateCommand extends Command
 
 		config(['database.default' => 'haunt']);
 
-		$batch = $this->option('batch') ?? "haunt-pet/haunt";
+		$batch = $this->option('batch') ?? "haunt/framework";
 		$option = $this->argument('option');
 		$path = $this->option('path') ?? "{$this->root}/database/migrations";
 

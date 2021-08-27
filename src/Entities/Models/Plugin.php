@@ -3,28 +3,6 @@ namespace Haunt\Entities\Models;
 
 use Haunt\Library\Classes\Model;
 
-/**
- * Haunt\Entities\Models\Plugin
- *
- * Properties
- * @property int $id
- * @property string $package
- * @property string $main
- * @property string $name
- * @property string $version
- * @property int $priority
- * @property bool $active
- * @property string $created_at
- * @property string $updated_at
- *
- * Attributes
- * @property string $url
- *
- * Relations
- *
- * Methods
- * @method \Haunt\Extend\BasePlugin instance()
- */
 class Plugin extends Model
 {
     /**
@@ -33,6 +11,7 @@ class Plugin extends Model
      */
     protected $casts = [
         'active' => 'boolean',
+		'requires' => 'array',
 	];
 
 	/**
@@ -74,10 +53,27 @@ class Plugin extends Model
 	/**
 	 * Create a new instance of this plugin.
 	 *
-	 * @return \Haunt\Extend\BasePlugin
+	 * @return \Illuminate\Support\Collection
 	 */
-	public function instance()
+	public function instances(): \Illuminate\Support\Collection
 	{
-		return new $this->main;
+		return $this->packages()->map(function($package) {
+			return new $package['main'];
+		});
+	}
+
+	/**
+	 * Create a new instance of this plugin.
+	 *
+	 * @return \Illuminate\Support\Collection
+	 */
+	public function packages(): \Illuminate\Support\Collection
+	{
+		$packages = collect();
+		$packages->push($this->toArray());
+		foreach($this->requires as $require) {
+			$packages->push($require);
+		}
+		return $packages;
 	}
 }
