@@ -42,9 +42,13 @@ class PluginController extends Controller
 	{
 		$package = $request->input('package');
 
-		Artisan::call('haunt:install-plugin', [
+		$exitcode = Artisan::call('haunt:install-plugin', [
 			'--package' => $package
 		]);
+
+		if($exitcode === 0) {
+			session()->flash('error', Artisan::output());
+		}
 
 		return redirect()->back();
 	}
