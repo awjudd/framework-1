@@ -15,7 +15,7 @@ class InstallPluginCommand extends Command
      * @var string
      */
     protected $signature = 'haunt:install-plugin
-							{--plugin=haunt/plugin-core : The plugin to install.}
+							{--package=haunt/plugin-core : The plugin to install.}
 							';
 
     /**
@@ -32,29 +32,28 @@ class InstallPluginCommand extends Command
 	 */
 	public function handle()
 	{
-		$plugin = $this->option('plugin');
+		$package = $this->option('package');
 
 		// check if the plugin has already been installed
-		if($this->composer->isPackageInstalled($plugin)) {
-			$this->output->writeln("<comment>Plugin Already Installed:</> {$plugin}");
+		if($this->composer->isPackageInstalled($package)) {
+			$this->output->writeln("<comment>Plugin Already Installed:</> {$package}");
 			return;
 		}
 
 		// install the plugin
-		$state = $this->composer->installPackage($plugin);
-		dd($state);
+		$state = $this->composer->installPackage($package);
 
 		// check if the plugin was installed without any errors
 		if($state === false) {
-			$this->output->writeln("<fg=red>Failed to Install Plugin:</> {$plugin}");
+			$this->output->writeln("<fg=red>Failed to Install Plugin:</> {$package}");
 			return;
 		}
 
 		// get the "plugin.json" data
-		$data = $this->composer->getPluginJsonFile($plugin);
+		$data = $this->composer->getPluginJsonFile($package);
 
 		// create a plugin model instance
-		if($plugin = Plugin::where('plugin', '=', $plugin)->first()) {
+		if($plugin = Plugin::where('package', '=', $package)->first()) {
 			// is the version already installed?
 			if($plugin->version === $data['version']) {
 				$this->output->writeln("<comment>Plugin Already Installed:</> {$plugin->plugin}");
@@ -64,7 +63,7 @@ class InstallPluginCommand extends Command
 			}
 		} else {
 			$plugin = new Plugin;
-			$plugin->package = $plugin;
+			$plugin->package = $package;
 			$plugin->main = $data['main'];
 			$plugin->name = $data['name'];
 			$plugin->version = $data['version'];

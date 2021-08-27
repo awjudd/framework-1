@@ -15,7 +15,7 @@ class CreatePluginsTable extends Migration
     {
         Schema::create('plugins', function (Blueprint $table) {
             $table->id();
-			$table->string('plugin')->unique();
+			$table->string('package')->unique();
 			$table->string('main');
 			$table->string('name');
 			$table->string('version');

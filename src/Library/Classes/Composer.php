@@ -19,7 +19,7 @@ class Composer extends BaseComposer
 	 */
 	public function __construct()
 	{
-		parent::__construct(new Filesystem());
+		parent::__construct(new Filesystem(), base_path());
 		$this->path = base_path('composer.lock');
 	}
 
@@ -35,7 +35,6 @@ class Composer extends BaseComposer
 			$this->runCommand(['require', $package]);
 			return true;
 		} catch(ProcessFailedException $exception) {
-			dd($exception);
 			return false;
 		}
 	}
@@ -57,7 +56,7 @@ class Composer extends BaseComposer
 		$path = base_path("vendor/{$plugin}/plugin.json");
 
 		if(!File::exists($path)) {
-			dd('failed');
+			dd('file not found');
 		}
 
 		$data = json_decode(file_get_contents($path), true);
