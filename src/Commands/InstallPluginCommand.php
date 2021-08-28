@@ -73,8 +73,10 @@ class InstallPluginCommand extends Command
 
 		// build the requires
 		$requires = [];
-		foreach($data['requires'] as $require) {
-			$requires[$require] = $this->composer->getPluginJsonFile($require);
+		if(array_key_exists('requires', $data)) {
+			foreach($data['requires'] as $require) {
+				$requires[$require] = $this->composer->getPluginJsonFile($require);
+			}
 		}
 		$plugin->requires = $requires;
 
