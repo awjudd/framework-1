@@ -31,7 +31,7 @@ class Composer extends BaseComposer
 	 */
 	public function getPluginJsonFile(string $plugin): array
 	{
-        $installed = $this->getInstalledPackage($plugin);
+		$installed = $this->getInstalledPackage($plugin);
 		$path = base_path("vendor/{$plugin}/plugin.json");
 
 		if(!File::exists($path)) {
@@ -82,9 +82,9 @@ class Composer extends BaseComposer
 	private function getInstalledPackage(string $package, ?string $version = null): ?array
 	{
 		// TODO: version
-        return collect(json_decode($this->files->get($this->path), true)['packages'])
-            ->keyBy('name')
-            ->get($package);
+		return collect(json_decode($this->files->get($this->path), true)['packages'])
+			->keyBy('name')
+			->get($package);
 	}
 
 	/**
