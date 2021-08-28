@@ -3,9 +3,6 @@
 	"description": "Haunt: The base package.",
 	"type": "package",
 	"license": "proprietary",
-    "repositories": [
-        { "type": "path", "url": "../../packages/laravel-blade-tiptap" }
-    ],
 	"require": {
 		"php": "^8.0",
 		"laravel/framework": "^8.52",

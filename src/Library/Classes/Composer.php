@@ -24,32 +24,11 @@ class Composer extends BaseComposer
 	}
 
 	/**
-	 * Install a package.
+	 * Get a plugin's json data.
 	 *
-	 * @param string $package
-	 * @return bool
+	 * @param string $plugin
+	 * @return array
 	 */
-	public function installPackage(string $package): bool
-	{
-		try {
-			$this->runCommand(['require', $package]);
-			return true;
-		} catch(ProcessFailedException $exception) {
-			return false;
-		}
-	}
-
-	/**
-	 * Check if a package is installed.
-	 *
-	 * @param string $package
-	 * @return bool
-	 */
-	public function isPackageInstalled(string $package): bool
-	{
-		return $this->getInstalledPackage($package) !== null;
-	}
-
 	public function getPluginJsonFile(string $plugin): array
 	{
         $installed = $this->getInstalledPackage($plugin);
@@ -64,14 +43,58 @@ class Composer extends BaseComposer
 		return $data;
 	}
 
-	private function getInstalledPackage(string $package): ?array
+	/**
+	 * Install a package.
+	 *
+	 * @param string $package
+	 * @param string $version
+	 * @return bool
+	 */
+	public function installPackage(string $package, string $version): bool
 	{
+		try {
+			$this->runCommand(['require', "{$package}:{$version}"]);
+			return true;
+		} catch(ProcessFailedException $exception) {
+			return false;
+		}
+	}
+
+	/**
+	 * Check if a package is installed.
+	 *
+	 * @param string $package
+	 * @param string $version
+	 * @return bool
+	 */
+	public function isPackageInstalled(string $package, string $version): bool
+	{
+		return $this->getInstalledPackage($package, $version) !== null;
+	}
+
+	/**
+	 * Get an installed package.
+	 *
+	 * @param string $package
+	 * @param string|null $version
+	 * @return array
+	 */
+	private function getInstalledPackage(string $package, ?string $version = null): ?array
+	{
+		// TODO: version
         return collect(json_decode($this->files->get($this->path), true)['packages'])
             ->keyBy('name')
             ->get($package);
 	}
 
-	private function runCommand(array $command = [])
+	/**
+	 * Run a command.
+	 *
+	 * @param array $command
+	 * @return bool
+	 * @throws \Symfony\Component\Process\Exception\ProcessFailedException
+	 */
+	private function runCommand(array $command = []): bool
 	{
 		$command = array_merge($this->findComposer(), $command);
 		$process = $this->getProcess($command);

@@ -9,20 +9,21 @@ use Symfony\Component\Process\Process;
 
 class InstallPluginCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'haunt:install-plugin
+	/**
+	 * The name and signature of the console command.
+	 *
+	 * @var string
+	 */
+	protected $signature = 'haunt:install-plugin
 							{--package=haunt/plugin-core : The plugin to install.}
+							{--version=dev-main : The version of the plugin.}
 							';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+	/**
+	 * The console command description.
+	 *
+	 * @var string
+	 */
 	protected $description = 'Install a Haunt plugin.';
 
 	/**
@@ -33,26 +34,29 @@ class InstallPluginCommand extends Command
 	public function handle()
 	{
 		$package = $this->option('package');
+		$version = $this->option('version');
 
-		// check if the plugin has already been installed
-		if($this->composer->isPackageInstalled($package)) {
+		// check if the plugin has already been installed,
+		// and if it has, exit straight away
+		if($this->composer->isPackageInstalled($package, $version)) {
 			$this->output->writeln("<comment>Plugin Already Installed:</> {$package}");
 			return;
 		}
 
-		// install the plugin
-		$state = $this->composer->installPackage($package);
+		$state = $this->composer->installPackage($package, $version);
 
-		// check if the plugin was installed without any errors
+		// composer might fail to install, so exit if it has
 		if($state === false) {
 			$this->output->writeln("<fg=red>Failed to Install Plugin:</> {$package}");
 			return;
 		}
 
-		// get the "plugin.json" data
+		// TODO: figure out how to load the installed package class
+		// the below didn't work
+		$this->composer->dumpOptimized();
+
 		$data = $this->composer->getPluginJsonFile($package);
 
-		// create a plugin model instance
 		if($plugin = Plugin::where('package', '=', $package)->first()) {
 			// is the version already installed?
 			if($plugin->version === $data['version']) {
@@ -81,22 +85,24 @@ class InstallPluginCommand extends Command
 		$plugin->requires = $requires;
 
 		$plugin->packages()->each(function($package) use($plugin) {
-			$instance = new $package['main'];
-			if($instance->migrations) {
-				$this->call('haunt:migrate', [
-					'--batch' => $plugin->package,
-					'--path' => $instance->migrations,
-				]);
-			}
+			if(class_exists($package['main'])) {
+				$instance = new $package['main'];
+				if($instance->migrations) {
+					$this->call('haunt:migrate', [
+						'--batch' => $plugin->package,
+						'--path' => $instance->migrations,
+					]);
+				}
 
-			// attempt to activate the plugin
-			$state = $instance->install($package['version'] ?? $plugin->version);
+				// attempt to activate the plugin
+				$state = $instance->install($package['version'] ?? $plugin->version);
 
-			// check if there were any errors
-			if($state->count() > 0) {
-				$instance->uninstall();
-				$this->output->writeln("<fg=red>Failed to Activate Plugin:</> {$state->first()}");
-				return;
+				// check if there were any errors
+				if($state->count() > 0) {
+					$instance->uninstall();
+					$this->output->writeln("<fg=red>Failed to Activate Plugin:</> {$state->first()}");
+					return;
+				}
 			}
 		});
 
